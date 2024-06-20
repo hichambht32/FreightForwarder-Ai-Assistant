@@ -79,38 +79,37 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
   const fetchMessages = async () => {
     const fetchedMessages = await getMessagesByChatId(params.chatid as string)
 
-    const imagePromises: Promise<MessageImage>[] = fetchedMessages.flatMap(
-      message =>
-        message.image_paths
-          ? message.image_paths.map(async imagePath => {
-              const url = await getMessageImageFromStorage(imagePath)
+    const imagePromises = fetchedMessages.flatMap(message =>
+      message.image_paths
+        ? message.image_paths.map(async imagePath => {
+            const url = await getMessageImageFromStorage(imagePath)
 
-              if (url) {
-                const response = await fetch(url)
-                const blob = await response.blob()
-                const base64 = await convertBlobToBase64(blob)
-
-                return {
-                  messageId: message.id,
-                  path: imagePath,
-                  base64,
-                  url,
-                  file: null
-                }
-              }
+            if (url) {
+              const response = await fetch(url)
+              const blob = await response.blob()
+              const base64 = await convertBlobToBase64(blob)
 
               return {
                 messageId: message.id,
                 path: imagePath,
-                base64: "",
+                base64,
                 url,
                 file: null
               }
-            })
-          : []
+            }
+
+            return {
+              messageId: message.id,
+              path: imagePath,
+              base64: "",
+              url,
+              file: null
+            }
+          })
+        : []
     )
 
-    const images: MessageImage[] = await Promise.all(imagePromises.flat())
+    const images = await Promise.all(imagePromises.flat())
     setChatImages(images)
 
     const messageFileItemPromises = fetchedMessages.map(
@@ -136,9 +135,33 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     setUseRetrieval(true)
     setShowFilesDisplay(true)
 
+    // Fetch response from Flask server for each message
+    const responsePromises = fetchedMessages.map(async message => {
+      const response = await fetch("http://127.0.0.1:5000/query", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          user_input: message.content, // Assuming message.content is the user input
+          message_id: message.id
+        })
+      })
+
+      const responseData = await response.json()
+      return {
+        messageId: message.id,
+        responseText: responseData.responseText
+      }
+    })
+
+    const responses = await Promise.all(responsePromises)
+
     const fetchedChatMessages = fetchedMessages.map(message => {
+      const response = responses.find(resp => resp.messageId === message.id)
       return {
         message,
+        responseText: response ? response.responseText : "",
         fileItems: messageFileItems
           .filter(messageFileItem => messageFileItem.id === message.id)
           .flatMap(messageFileItem =>

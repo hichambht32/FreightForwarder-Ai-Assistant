@@ -2,7 +2,7 @@
 
 UPDATE workspaces
 SET default_model = 'gpt-4-turbo-preview'
-WHERE default_model = 'gpt-4-1106-preview';
+WHERE default_model = 'gpt-4-turbo-preview';
 
 UPDATE workspaces
 SET default_model = 'gpt-3.5-turbo'
@@ -12,7 +12,7 @@ WHERE default_model = 'gpt-3.5-turbo-1106';
 
 UPDATE presets
 SET model = 'gpt-4-turbo-preview'
-WHERE model = 'gpt-4-1106-preview';
+WHERE model = 'gpt-4-turbo-preview';
 
 UPDATE presets
 SET model = 'gpt-3.5-turbo'
@@ -22,7 +22,7 @@ WHERE model = 'gpt-3.5-turbo-1106';
 
 UPDATE assistants
 SET model = 'gpt-4-turbo-preview'
-WHERE model = 'gpt-4-1106-preview';
+WHERE model = 'gpt-4-turbo-preview';
 
 UPDATE assistants
 SET model = 'gpt-3.5-turbo'
@@ -32,7 +32,7 @@ WHERE model = 'gpt-3.5-turbo-1106';
 
 UPDATE chats
 SET model = 'gpt-4-turbo-preview'
-WHERE model = 'gpt-4-1106-preview';
+WHERE model = 'gpt-4-turbo-preview';
 
 UPDATE chats
 SET model = 'gpt-3.5-turbo'
@@ -42,7 +42,7 @@ WHERE model = 'gpt-3.5-turbo-1106';
 
 UPDATE messages
 SET model = 'gpt-4-turbo-preview'
-WHERE model = 'gpt-4-1106-preview';
+WHERE model = 'gpt-4-turbo-preview';
 
 UPDATE messages
 SET model = 'gpt-3.5-turbo'

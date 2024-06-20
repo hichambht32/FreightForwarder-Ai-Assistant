@@ -336,13 +336,12 @@ export const Message: FC<MessageProps> = ({
                 </div>
 
                 <div className="mt-3 space-y-4">
-                  {Object.values(fileSummary).map((file, index) => (
-                    <div key={index}>
+                  {Object.values(fileSummary).map(file => (
+                    <div key={file.id}>
                       <div className="flex items-center space-x-2">
                         <div>
                           <FileIcon type={file.type} />
                         </div>
-
                         <div className="truncate">{file.name}</div>
                       </div>
 
@@ -353,9 +352,9 @@ export const Message: FC<MessageProps> = ({
                           )
                           return parentFile?.id === file.id
                         })
-                        .map((fileItem, index) => (
+                        .map(fileItem => (
                           <div
-                            key={index}
+                            key={fileItem.id} // Ensure fileItem.id is unique and stable
                             className="ml-8 mt-1.5 flex cursor-pointer items-center space-x-2 hover:opacity-50"
                             onClick={() => {
                               setSelectedFileItem(fileItem)
